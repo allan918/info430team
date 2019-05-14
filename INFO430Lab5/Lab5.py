@@ -1,4 +1,4 @@
-
+import pyodbc
 import requests as r
 from bs4 import BeautifulSoup as bs
 ## import ODBC
@@ -29,8 +29,8 @@ print(len(newlink))
 finalURL = [];
 for i in newlink:
     finalURL.append(i['href'])
-print(finalURL)
-count = 1
+    print(finalURL)
+    count = 1
 for i in finalURL:
     temp = r.get("http://books.toscrape.com/catalogue/" + i)
     book = bs(temp.content, 'html.parser')
@@ -45,8 +45,8 @@ for i in finalURL:
 all = list(zip(titles, prices,des, genres))
 for i in all:
     print(i)
-print(len(all))
-print("done")
+    print(len(all))
+    print("done")
 # totalResults = int(pageInfoChildren[1].text)
 # perPage = int(PageInfoChildren[3].text)
 # totalPages = int(totalResults / perPage)
@@ -60,3 +60,26 @@ print("done")
 #     container = pageScrape.select('h3 a')
 #
 #     links.extend([domain + 'catalogue/' + i ['href'] for i in container])
+
+
+
+#sql 
+
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=rosem15_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True') 
+curr = cnxn.cursor()
+intertBook = """
+SET NOCOUNT ON; 
+EXECUTE [dbo].[rosem15usp_insertBook]
+@title = ?, 
+@price = ?,
+@descr = ?,
+@genre = ?
+""" 
+for i in all: 
+    bookTitle = i[0]
+    bookPrice = i[1]
+    bookDescr = i[2]
+    genre = i[3]
+    params = (bookTitle, bookPrice, bookDescr, genre)
+    curr.execute(insertBook, params)
+cnxn.commit()
