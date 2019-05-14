@@ -67,7 +67,7 @@ for i in all:
 
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=rosem15_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True') 
 curr = cnxn.cursor()
-intertBook = """
+insertBook = """
 SET NOCOUNT ON; 
 EXECUTE [dbo].[rosem15usp_insertBook]
 @title = ?, 
