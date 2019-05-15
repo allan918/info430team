@@ -20,7 +20,7 @@ genreID INT FOREIGN KEY REFERENCES tblGenre(genreID)
 )
 
 
-ALTER PROCEDURE team13usp_insertBook
+Create PROCEDURE team13usp_insertBook
 @bookTitle VARCHAR(256),
 @bookPrice SMALLMONEY,
 @bookDesc VARCHAR(4096),
