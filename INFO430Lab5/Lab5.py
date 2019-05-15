@@ -72,7 +72,7 @@ print("done")
 
 insertBook = """
 SET NOCOUNT ON; 
-EXECUTE [dbo].[team13_insertBook]
+EXECUTE [dbo].[team13usp_insertBook]
 @bookTitle = ?, 
 @bookPrice = ?,
 @bookDesc = ?,

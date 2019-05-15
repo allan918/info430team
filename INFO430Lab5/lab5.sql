@@ -20,7 +20,7 @@ genreID INT FOREIGN KEY REFERENCES tblGenre(genreID)
 )
 
 
-create PROCEDURE team13_insertBook
+Create PROCEDURE team13usp_insertBook
 @bookTitle VARCHAR(256),
 @bookPrice SMALLMONEY,
 @bookDesc VARCHAR(4096),
@@ -36,6 +36,7 @@ RETURN
 END
 
 SET @G_ID = (SELECT GenreID FROM tblGenre WHERE genreName = @genreName) 
+
 BEGIN TRAN G1
 
 INSERT INTO tblGenre (genreName) 
@@ -43,7 +44,6 @@ VALUES (@genreName)
 
 SET @G_ID = (SELECT SCOPE_IDENTITY()) 
 
- 
 INSERT INTO tblBook (bookTitle, bookPrice, bookDesc, genreID) 
 VALUES (@bookTitle, @bookPrice, @bookDesc, @G_ID)
 
