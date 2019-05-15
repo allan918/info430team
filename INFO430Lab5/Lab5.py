@@ -2,7 +2,7 @@ import pyodbc
 import requests as r
 from bs4 import BeautifulSoup as bs
 ## import ODBC
-cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=team13_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=team_13_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
 curr = cnxn.cursor()
 print("done connecting")
 domain = 'http://books.toscrape.com'
@@ -72,7 +72,7 @@ print("done")
 
 insertBook = """
 SET NOCOUNT ON; 
-EXECUTE [dbo].[team13usp_insertBook]
+EXECUTE [dbo].[team_13usp_insertBook]
 @bookTitle = ?, 
 @bookPrice = ?,
 @bookDesc = ?,
