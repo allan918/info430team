@@ -35,15 +35,17 @@ RAISERROR ('parameters cannot be NULL', 11, 1)
 RETURN
 END
 
+
+IF (SELECT genreID FROM tblGenre WHERE genreName = @genreName) IS NULL   
+	INSERT INTO tblGenre (genreName) 
+	VALUES (@genreName)
+
+
 SET @G_ID = (SELECT GenreID FROM tblGenre WHERE genreName = @genreName) 
-
-BEGIN TRAN G1
-
-INSERT INTO tblGenre (genreName) 
-VALUES (@genreName)
 
 SET @G_ID = (SELECT SCOPE_IDENTITY()) 
 
+BEGIN TRAN G1
 INSERT INTO tblBook (bookTitle, bookPrice, bookDesc, genreID) 
 VALUES (@bookTitle, @bookPrice, @bookDesc, @G_ID)
 
