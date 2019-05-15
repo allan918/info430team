@@ -1,7 +1,7 @@
-CREATE DATABASE rosem15_BookDB
+CREATE DATABASE team_13_BookDB
 GO
 
-USE rosem15_BookDB
+USE team_13_BookDB
 
 CREATE TABLE tblGenre (
 genreID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -20,7 +20,7 @@ genreID INT FOREIGN KEY REFERENCES tblGenre(genreID)
 )
 
 
-ALTER PROCEDURE rosem15usp_insertBook
+Create PROCEDURE team_13usp_insertBook
 @bookTitle VARCHAR(256),
 @bookPrice SMALLMONEY,
 @bookDesc VARCHAR(4096),
