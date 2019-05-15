@@ -1,7 +1,7 @@
-CREATE DATABASE rosem15_BookDB
+CREATE DATABASE team13_BookDB
 GO
 
-USE rosem15_BookDB
+USE team13_BookDB
 
 CREATE TABLE tblGenre (
 genreID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -20,7 +20,7 @@ genreID INT FOREIGN KEY REFERENCES tblGenre(genreID)
 )
 
 
-ALTER PROCEDURE rosem15usp_insertBook
+ALTER PROCEDURE team13usp_insertBook
 @bookTitle VARCHAR(256),
 @bookPrice SMALLMONEY,
 @bookDesc VARCHAR(4096),
@@ -37,13 +37,13 @@ END
 
 SET @G_ID = (SELECT GenreID FROM tblGenre WHERE genreName = @genreName) 
 
-IF @G_ID IS NULL 
+BEGIN TRAN G1
+
 INSERT INTO tblGenre (genreName) 
 VALUES (@genreName)
 
 SET @G_ID = (SELECT SCOPE_IDENTITY()) 
 
-BEGIN TRAN G1 
 INSERT INTO tblBook (bookTitle, bookPrice, bookDesc, genreID) 
 VALUES (@bookTitle, @bookPrice, @bookDesc, @G_ID)
 
