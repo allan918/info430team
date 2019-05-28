@@ -3,7 +3,8 @@ GO
 
 USE team13_BookDB
 
-CREATE TABLE tblGenre (
+CREATE -- drop
+TABLE tblGenre (
 genreID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 genreName VARCHAR(256) NOT NULL,
 genreDesc VARCHAR(4096) NULL
@@ -11,7 +12,8 @@ genreDesc VARCHAR(4096) NULL
 
 GO
 
-CREATE TABLE tblBook (
+CREATE --drop
+TABLE tblBook (
 bookID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 bookTitle VARCHAR(256) NOT NULL,
 bookPrice SMALLMONEY NULL,
@@ -52,3 +54,5 @@ IF @@ERROR <> 0
 ELSE 
 	COMMIT TRAN G1
 GO 
+
+
