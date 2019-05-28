@@ -19,7 +19,7 @@ bookPrice SMALLMONEY NULL,
 bookDesc VARCHAR(4096) NULL,
 genreID INT FOREIGN KEY REFERENCES tblGenre(genreID)
 )
-
+GO 
 -- build stored procedure to handle the insert of a single book
 -- with proper error handling
 CREATE PROCEDURE usp_insertBook
