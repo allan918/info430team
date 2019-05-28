@@ -2,6 +2,13 @@ import pyodbc
 import requests as r
 from bs4 import BeautifulSoup as bs
 ## import ODBC
+<<<<<<< HEAD
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=team_13_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
+=======
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=rosem15_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
+>>>>>>> 76d4ead1e073d3d33ed2cddb9efb9c204fcb4de1
+curr = cnxn.cursor()
+print("done connecting")
 domain = 'http://books.toscrape.com'
 frontPage = r.get(domain)
 frontPageScrape = bs(frontPage.content, 'html.parser')
@@ -45,8 +52,9 @@ for i in finalURL:
 all = list(zip(titles, prices,des, genres))
 for i in all:
     print(i)
-    print(len(all))
-    print("done")
+
+print(len(all))
+print("done")
 # totalResults = int(pageInfoChildren[1].text)
 # perPage = int(PageInfoChildren[3].text)
 # totalPages = int(totalResults / perPage)
@@ -63,23 +71,27 @@ for i in all:
 
 
 
-#sql 
+#sql
 
-cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=rosem15_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True') 
-curr = cnxn.cursor()
+
 insertBook = """
 SET NOCOUNT ON; 
+<<<<<<< HEAD
+EXECUTE [dbo].[team_13usp_insertBook]
+=======
 EXECUTE [dbo].[rosem15usp_insertBook]
-@title = ?, 
-@price = ?,
-@descr = ?,
-@genre = ?
-""" 
-for i in all: 
+>>>>>>> 76d4ead1e073d3d33ed2cddb9efb9c204fcb4de1
+@bookTitle = ?, 
+@bookPrice = ?,
+@bookDesc = ?,
+@genreName = ?
+"""
+for i in all:
     bookTitle = i[0]
     bookPrice = i[1]
     bookDescr = i[2]
     genre = i[3]
+    print(bookTitle, bookPrice, bookDescr, genre)
     params = (bookTitle, bookPrice, bookDescr, genre)
     curr.execute(insertBook, params)
 cnxn.commit()
