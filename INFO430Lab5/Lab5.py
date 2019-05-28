@@ -2,7 +2,11 @@ import pyodbc
 import requests as r
 from bs4 import BeautifulSoup as bs
 ## import ODBC
-cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=team13_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
+<<<<<<< HEAD
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=team_13_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
+=======
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER=IS-HAY04.ischool.uw.edu;DATABASE=rosem15_BookDB;UID=info430;PWD=GoHuskies!;autocommit=True')
+>>>>>>> 76d4ead1e073d3d33ed2cddb9efb9c204fcb4de1
 curr = cnxn.cursor()
 print("done connecting")
 domain = 'http://books.toscrape.com'
@@ -67,17 +71,21 @@ print("done")
 
 
 
-#sql 
+#sql
 
 
 insertBook = """
 SET NOCOUNT ON; 
-EXECUTE [dbo].[team13usp_insertBook]
+<<<<<<< HEAD
+EXECUTE [dbo].[team_13usp_insertBook]
+=======
+EXECUTE [dbo].[rosem15usp_insertBook]
+>>>>>>> 76d4ead1e073d3d33ed2cddb9efb9c204fcb4de1
 @bookTitle = ?, 
 @bookPrice = ?,
 @bookDesc = ?,
 @genreName = ?
-""" 
+"""
 for i in all:
     bookTitle = i[0]
     bookPrice = i[1]
