@@ -9,4 +9,4 @@ VALUES ('Short Answer', 'Less then 50 words.'), ('Long Answer', 'More then 50 wo
 ('Multiple Choice', 'Give many choices to user.'), ('Check all that apply', 'Allows one to choose more then one answer.')
 
 INSERT INTO tblQUESTION (QuestionName, QuestionDate, QuestionTypeID)
-VALUES ('At what time do you typically watch TV?', '')
+VALUES ('Around what time do you typically watch TV?', '01/01/2019', (SELECT QuestionTypeID FROM tblQUESTION_TYPE WHERE QuestionTypeName = 'Multiple Choice'))
