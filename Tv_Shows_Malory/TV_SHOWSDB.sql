@@ -64,7 +64,8 @@ CREATE TABLE tblCUSTOMER (CustomerID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
                             [Address] VARCHAR(50) NOT NULL, 
                             [State] VARCHAR(50) NOT NULL, 
                             City VARCHAR(50)NOT NULL, 
-                            PostalCode CHAR(9) NOT NULL)
+                            PostalCode CHAR(9) NOT NULL, 
+                            Country VARCHAR(50) NOT NULL)
 GO
 CREATE TABLE tblMEMBERSHIP (MembershipID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
                             CustomerID INT FOREIGN KEY REFERENCES tblCUSTOMER NOT NULL, 

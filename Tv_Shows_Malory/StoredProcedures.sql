@@ -46,19 +46,20 @@ CREATE PROCEDURE newCustomer
 @Address VARCHAR(50), 
 @State VARCHAR(50),
 @City VARCHAR(50),
-@PostalCode CHAR(9)
+@PostalCode CHAR(9), 
+@Country VARCHAR(50)
 AS
 --DECLARE @CustomerID INT 
 IF @CustomerFname IS NULL OR @CustomerLname IS NULL OR @CustomerDOB IS NULL 
-    OR @Address IS NULL OR @State IS NULL OR @City IS NULL OR @PostalCode IS NULL
+    OR @Address IS NULL OR @State IS NULL OR @City IS NULL OR @PostalCode IS NULL OR @Country IS NULL
     BEGIN 
     PRINT 'paramaters can''t be NULL' 
     RAISERROR ('One or more Paramater is Null', 11, 1)
     RETURN 
     END
 BEGIN TRAN G1 
-    INSERT INTO tblCUSTOMER (CustFname, CustLname, CustDOB, [Address], [State], City, PostalCode)
-    VALUES (@CustomerFname, @CustomerLname, @CustomerDOB, @Address, @State, @City, @PostalCode)
+    INSERT INTO tblCUSTOMER (CustFname, CustLname, CustDOB, [Address], [State], City, PostalCode, Country)
+    VALUES (@CustomerFname, @CustomerLname, @CustomerDOB, @Address, @State, @City, @PostalCode, @Country)
     IF @@ERROR <> 0 
         ROLLBACK TRAN G1
     ELSE 
@@ -90,3 +91,50 @@ GO
 ALTER TABLE tblPLATFORM 
 ADD CONSTRAINT CK_OnlyNetflixOutsideOfUS
 CHECK (dbo.fn_OnlyNetflixOutsideOfUS() = 0) 
+
+GO 
+-- Inserting new membership 
+CREATE PROC newMembership 
+@CFname VARCHAR(30), 
+@CLname VARCHAR(30), 
+@CDOB DATE, 
+@MemName VARCHAR(50), 
+@MemDescr VARCHAR(150), 
+@Price NUMERIC(8,2),
+@BeginDate DATE, 
+@EndDate DATE
+AS 
+
+IF @CFname IS NULL OR @CLname IS NULL OR @CDOB IS NULL OR @MemName IS NULL OR 
+@MemDescr IS NULL OR @Price IS NULL OR @BeginDate IS NULL OR @EndDate IS NULL 
+    BEGIN 
+    PRINT 'Parameters cannot be null'
+    RAISERROR ('one or more of your parameters are null', 11, 1)
+    RETURN 
+    END
+
+DECLARE @CID ITN 
+
+EXECUTE getCustID 
+@CustFname = @CFname, 
+@CustLname = @CLname, 
+@CustDOB = @CDOB, 
+@CustID = @CID OUTPUT 
+
+IF @CID IS NULL 
+    BEGIN  
+    PRINT 'CID cannot be null'
+    RAISERROR ('CID is null', 11, 1)
+    RETURN 
+    END
+
+BEGIN TRAN G1
+    INSERT INTO tblMEMBERSHIP (CustomerID, MembershipName, MembershipDescr, MembershipPrice, BeginDate, EndDate)
+    VALUES (@CID, @MemName, @MemDescr, @Price, @BeginDate, @EndDate)
+    IF @@ERROR <> 0
+        ROLLBACK TRAN G1
+    ELSE 
+        COMMIT TRAN G1
+
+GO 
+    
