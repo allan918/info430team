@@ -151,4 +151,16 @@ JOIN tblSERIES S ON E.SeriesID = S.SeriesID
 WHERE C.Country = 'United Kingdom' AND S.SeriesName = 'Friends'
 AND P.PlatformName = 'Netflix'
 GO
-    
+
+-- Find all episodes in (Comedy) in (English) with (Matthew Perry)
+CREATE VIEW [ActorInComediesInEnglish] AS 
+SELECT E.EpisodeID, EpisodeName 
+FROM tblEPISODE E 
+JOIN tblEPISODE_GENRE EG ON E.EpisodeID = EG.EpisodeID
+JOIN tblGENRE G ON EG.GenreID = G.GenreID
+JOIN tblSERIES S ON E.SeriesID = S.SeriesID
+JOIN tblLANGUAGE L ON S.LanguageID = L.LanguageID
+JOIN tblPERSON_CREDIT_EPISODE PCE ON E.EpisodeID = PCE.EpisodeID
+JOIN tblPERSON P ON PCE.PersonID = P.PersonID
+WHERE G.GenreName = 'Comedy' AND P.PersonFname = 'Matthew' AND P.PersonLname = 'Perry'
+AND L.LanguageName = 'English'
