@@ -137,4 +137,18 @@ BEGIN TRAN G1
         COMMIT TRAN G1
 
 GO 
+
+-- Find all the customers from (United Kingdom) that watched (Friends) on netflix
+CREATE VIEW [UnitedKingdomCustomers] AS 
+SELECT C.CustomerID, CustFname, CustLname
+FROM tblCUSTOMER C 
+JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+JOIN tblDOWNLOAD_EPISODE DE ON M.MembershipID = DE.MembershipID
+JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+JOIN tblPLATFORM P ON PE.PlatformID = P.PlatformID
+JOIN tblEPISODE E ON PE.EpisodeID = E.EpisodeID
+JOIN tblSERIES S ON E.SeriesID = S.SeriesID
+WHERE C.Country = 'United Kingdom' AND S.SeriesName = 'Friends'
+AND P.PlatformName = 'Netflix'
+GO
     
