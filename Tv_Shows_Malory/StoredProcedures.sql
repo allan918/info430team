@@ -1,19 +1,7 @@
 USE TV_SHOWS 
 GO 
-/*1) Stored procedure (DONE)
-2) Check constraint (NEED TO DO)
-3) Computed column (NEED TO DO)
-4) Views (NEED TO DO)
 
-As stated in lecture, grading will be based on the student's ability to leverage complex skills presented in lecture and should include the following where appropriate:
-* explicit transactions
-* Complexity as appropriate: multiple JOINs, GROUP BY, ORDER BY, TOP, RANK, CROSS APPLY
-* error-handling
-* passing of appropriate  parameters (name values and/or output parameters)
-* subqueries
-* variables*/
-
--- 1) GetEpisodeID 
+--GetEpisodeID 
 CREATE PROCEDURE GetEpisodeID 
 @EpisodeName VARCHAR(100), 
 @EpisodeOverview VARCHAR(500), 
@@ -26,7 +14,7 @@ SET @EpisodeID = (SELECT EpisodeID FROM tblEPISODE WHERE EpisodeName = @EpisodeN
                 AND BroadcastDate = @BroadcastDate)
 GO 
 
--- 2) GetMembershipID
+--GetMembershipID
 CREATE PROCEDURE GetMembershipID 
 @MembershipName VARCHAR(50), 
 @MembershipDescr VARCHAR(150), 
@@ -38,7 +26,8 @@ SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP WHERE MembershipName
                     AND MembershipDescr = @MembershipDescr AND BeginDate = @BeginDate AND EndDate = @EndDate)
 GO 
 
---3) NewCustomer 
+-- stored procedure 1 
+--NewCustomer 
 CREATE PROCEDURE newCustomer 
 @CustomerFname VARCHAR(30), 
 @CustomerLname VARCHAR(30), 
@@ -49,7 +38,6 @@ CREATE PROCEDURE newCustomer
 @PostalCode CHAR(9), 
 @Country VARCHAR(50)
 AS
---DECLARE @CustomerID INT 
 IF @CustomerFname IS NULL OR @CustomerLname IS NULL OR @CustomerDOB IS NULL 
     OR @Address IS NULL OR @State IS NULL OR @City IS NULL OR @PostalCode IS NULL OR @Country IS NULL
     BEGIN 
@@ -66,9 +54,9 @@ BEGIN TRAN G1
         COMMIT TRAN G1
 GO 
 
---4) Can only watch Netflix if country 
+-- business rule 1
+--Can only watch Netflix if country 
 --is not the US
-
 CREATE FUNCTION fn_OnlyNetflixOutsideOfUS()
 RETURNS INT 
 AS
@@ -93,6 +81,7 @@ ADD CONSTRAINT CK_OnlyNetflixOutsideOfUS
 CHECK (dbo.fn_OnlyNetflixOutsideOfUS() = 0) 
 
 GO 
+-- Stored procedure 2
 -- Inserting new membership 
 CREATE PROC newMembership 
 @CFname VARCHAR(30), 
@@ -138,6 +127,7 @@ BEGIN TRAN G1
 
 GO 
 
+-- View 1
 -- Find all the customers from (United Kingdom) that watched (Friends) on netflix
 CREATE VIEW [UnitedKingdomCustomers] AS 
 SELECT C.CustomerID, CustFname, CustLname
@@ -152,6 +142,7 @@ WHERE C.Country = 'United Kingdom' AND S.SeriesName = 'Friends'
 AND P.PlatformName = 'Netflix'
 GO
 
+--View 2
 -- Find all episodes in (Comedy) in (English) with (Matthew Perry)
 CREATE VIEW [ActorInComediesInEnglish] AS 
 SELECT E.EpisodeID, EpisodeName 
@@ -164,3 +155,23 @@ JOIN tblPERSON_CREDIT_EPISODE PCE ON E.EpisodeID = PCE.EpisodeID
 JOIN tblPERSON P ON PCE.PersonID = P.PersonID
 WHERE G.GenreName = 'Comedy' AND P.PersonFname = 'Matthew' AND P.PersonLname = 'Perry'
 AND L.LanguageName = 'English'
+
+GO 
+-- Computed column 
+CREATE FUNCTION fn_NumOfMembersFromTexasWatchNetflix(@CustomerID INT)
+RETURNS INT 
+AS 
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT SUM(C.CustomerID)
+        FROM tblCUSTOMER C 
+            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblPLATFORM P ON PE.PlatformID = P.PlatformID
+        WHERE C.[State] = 'Texas' AND P.PlatformName = 'Netflix')
+        RETURN @Ret
+END 
+GO 
+ALTER TABLE tblCUSTOMER
+ADD TotalTexans AS (dbo.fn_NumOfMembersFromTexasWatchNetflix(CustomerID))
