@@ -26,6 +26,18 @@ SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP WHERE MembershipName
                     AND MembershipDescr = @MembershipDescr AND BeginDate = @BeginDate AND EndDate = @EndDate)
 GO 
 
+
+--get custID 
+CREATE PROC GetCustID 
+@CustFname VARCHAR(30), 
+@CustLname VARCHAR(30), 
+@CustDOB DATE, 
+@CustID INT OUTPUT
+AS 
+SET @CustID = (Select CustomerID FROM tblCUSTOMER 
+WHERE CustFname = @CustFname AND CustLname = @CustLname 
+AND CustDOB = @CustDOB)
+GO 
 -- stored procedure 1 
 --NewCustomer 
 CREATE PROCEDURE newCustomer 
