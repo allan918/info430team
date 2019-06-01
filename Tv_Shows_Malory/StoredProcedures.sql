@@ -114,7 +114,7 @@ IF @CFname IS NULL OR @CLname IS NULL OR @CDOB IS NULL OR @MemName IS NULL OR
     RETURN 
     END
 
-DECLARE @CID ITN 
+DECLARE @CID INT 
 
 EXECUTE getCustID 
 @CustFname = @CFname, 
