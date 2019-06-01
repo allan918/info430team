@@ -157,8 +157,11 @@ WHERE G.GenreName = 'Comedy' AND P.PersonFname = 'Matthew' AND P.PersonLname = '
 AND L.LanguageName = 'English'
 
 GO 
+
+
 -- Computed column 
-CREATE FUNCTION fn_NumOfMembersFromTexasWatchNetflix(@CustomerID INT)
+
+CREATE FUNCTION fn_NumOfCustomersFromTexasWatchNetflix(@CustomerID INT)
 RETURNS INT 
 AS 
 BEGIN 
@@ -174,4 +177,26 @@ BEGIN
 END 
 GO 
 ALTER TABLE tblCUSTOMER
-ADD TotalTexans AS (dbo.fn_NumOfMembersFromTexasWatchNetflix(CustomerID))
+ADD TotalTexans AS (dbo.fn_NumOfCustomersFromTexasWatchNetflix(CustomerID))
+GO 
+
+CREATE FUNCTION fn_numberOfCustomersWatchGossipGirl(@CustomerID INT) 
+RETURNS INT 
+AS
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT SUM(C.CustomerID)
+        FROM tblCUSTOMER C
+            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblEPISODE E ON PE.EpisodeID = E.EpisodeID
+            JOIN tblSERIES S ON E.SeriesID = S.SeriesID
+        WHERE S.SeriesName = 'Gosip Girl')
+    RETURN @Ret
+END 
+GO 
+
+ALTER TABLE tblCUSTOMER 
+ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(CustomerID))
+GO 
