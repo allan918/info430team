@@ -27,7 +27,7 @@ SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP WHERE MembershipName
 GO 
 
 
---get custID 
+--GetCustID 
 CREATE PROC GetCustID 
 @CustFname VARCHAR(30), 
 @CustLname VARCHAR(30), 
@@ -38,6 +38,85 @@ SET @CustID = (Select CustomerID FROM tblCUSTOMER
 WHERE CustFname = @CustFname AND CustLname = @CustLname 
 AND CustDOB = @CustDOB)
 GO 
+
+-- GetGenreID
+CREATE PROC GetGenreID
+@GenreName VARCHAR(100),
+@GenreDesc VARCHAR(150),
+@GenreID INT OUTPUT 
+AS
+SET @GenreID = (SELECT GenreID FROM tblGENRE
+WHERE GenreName = @GenreName
+AND GenreDesc = @GenreDesc)
+GO
+
+-- GetLanguageID
+CREATE PROC GetLanguageID
+@LanguageCode VARCHAR(5),
+@LanguageName VARCHAR(50),
+@LanguageID INT OUTPUT
+AS
+SET @LanguageID = (SELECT LanguageID FROM tblLANGUAGE
+WHERE LanguageCode = @LanguageCode
+AND LanguageName = @LanguageName)
+GO
+
+-- GetGenderID
+CREATE PROC GetGenderID
+@GenderName VARCHAR(10),
+@GenderID INT OUTPUT
+AS
+SET @GenderID = (SELECT GenderID FROM tblGender
+WHERE GenderName = @GenderName)
+GO 
+
+-- GetPersonID
+CREATE PROC GetPersonID
+@PersonFname VARCHAR(30), 
+@PersonLname VARCHAR(30), 
+@PersonDOB DATE, 
+@PersonBiography VARCHAR(500), 
+@PersonPopularity INT,
+@PersonID INT OUTPUT
+AS
+SET @PersonID = (SELECT PersonID FROM tblPERSON
+WHERE @PersonFname = PersonFname
+AND @PersonLname = PersonLname
+AND @PersonDOB = PersonDOB
+AND @PersonBiography = PersonBiography
+AND @PersonPopularity = PersonPopularity)
+GO
+
+-- GetSeriesID
+CREATE PROC GetSeriesID
+@SeriesName VARCHAR(100), 
+@SeriesOverview VARCHAR(500), 
+@SeriesPopularity INT, 
+@SeasonTotal INT, 
+@SeriesBeginDate DATE, 
+@SeriesEndDate DATE,
+@SeriesOutput INT OUTPUT
+AS
+SET @SeriesID = (SELECT SeriesID FROM tblSERIES
+WHERE @SeriesName = SeriesName
+AND @SeriesOverview = SeriesOverview
+AND @SeriesPopularity = SeriesPopularity
+AND @SeasonTotal = SeasonTotal
+AND @SeriesBeginDate = SeriesBeginDate
+AND @SeriesEndDate = SeriesEndDate)
+GO
+
+-- Get PlatformID
+CREATE PROC GetPlatformID
+@PlatformName VARCHAR(50),
+@PlatformDescr VARCHAR(150),
+@PlatformID INT OUTPUT
+AS
+SET @PlatformID = (SELECT PlatformID FROM tblPLATFORM
+WHERE @PlatformName = PlatformName
+AND @PlatformDescr = PlatformDescr)
+GO
+
 -- stored procedure 1 
 --NewCustomer 
 CREATE PROCEDURE newCustomer 
