@@ -17,7 +17,7 @@ CREATE TABLE tblEPISODE (EpisodeID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
                         SeriesID INT FOREIGN KEY REFERENCES tblSERIES (SeriesID) NOT NULL, 
                         EpisodeName VARCHAR(100) NOT NULL, 
                         EpisodeOverview VARCHAR(500) NOT NULL, 
-                        EpisodeRuntime TIME NOT NULL, 
+                        EpisodeRuntime INT NOT NULL, 
                         BroadcastDate DATE)
 GO 
 CREATE TABLE tblGENRE (GenreID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 

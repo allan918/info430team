@@ -87,7 +87,7 @@ AND @PersonBiography = PersonBiography
 AND @PersonPopularity = PersonPopularity)
 GO
 
--- GetSeriesID
+-- GetSeriesID (fix this!!!!!)
 CREATE PROC GetSeriesID
 @SeriesName VARCHAR(100), 
 @SeriesOverview VARCHAR(500), 
