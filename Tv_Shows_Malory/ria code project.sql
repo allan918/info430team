@@ -83,45 +83,41 @@ GO
 
 --stored procedure num 1 ria
 CREATE PROCEDURE newseries
-@EpName VARCHAR(30), 
-@EpOverview VARCHAR(30), 
-@EpRunTime DATE,
-@BroadDate DATE, 
 @SerName VARCHAR(50),
 @SerPopularity INT,
 @SerTotal INT,
 @SerOverview VARCHAR(50),
-@SerBeginDate DATE, 
-@SerEndDate DATE
+@SerBeginDate INT, 
+@SerEndDate INT,
+@LangCode VARCHAR(5),
+@LangName VARCHAR(50)
 AS 
 
-IF @EpName IS NULL OR @EpOverview IS NULL OR @EpRunTime IS NULL OR @SerName IS NULL OR @SerPopularity IS NULL OR @SerTotal IS NULL OR 
-@SerOverview IS NULL OR @SerBeginDate IS NULL OR @SerEndDate IS NULL 
+IF @SerName IS NULL OR @SerPopularity IS NULL OR @SerTotal IS NULL OR 
+@SerOverview IS NULL OR @SerBeginDate IS NULL OR @LangCode IS NULL OR @LangName IS NULL 
     BEGIN 
     PRINT 'Parameters cannot be null'
     RAISERROR ('one or more of your parameters are null', 11, 1)
     RETURN 
     END
 
-DECLARE @EID INT 
+DECLARE @LID INT 
 
-EXECUTE GetEpisodeID
-@@EpisodeName = @EpName, 
-@EpisodeOverview = @EpOverview, 
-@EpisodeRuntime = @EpRunTime, 
-@BroadcastDate = @BroadDate,
-@EpisodeID = @EID OUTPUT 
+EXECUTE GetLanguageID
+@LanguageCode = @LangCode,
+@LanguageName = @LangName,
+@LanguageID  = @LID OUTPUT 
 
-IF @EID IS NULL 
+IF @LID IS NULL 
     BEGIN  
-    PRINT 'EID cannot be null'
-    RAISERROR ('EID is null', 11, 1)
+    PRINT 'LID cannot be null'
+    RAISERROR ('LID is null', 11, 1)
     RETURN 
     END
 
 BEGIN TRAN G1
-    INSERT INTO tblSERIES (EpisodeID, SeriesName, SeriesOverview, SeriesPopularity, SeasonTotal, SeriesBeginDate, SeriesEndDate)
-    VALUES (@EID, @SerName, @SerOverview, @SerPopularity, @SerTotal, @SerBeginDate, @SerEndDate)
+    INSERT INTO tblSERIES (LanguageID, SeriesName, SeriesOverview, SeriesPopularity, SeasonTotal, SeriesBeginDate, SeriesEndDate)
+    VALUES (@LID, @SerName, @SerOverview, @SerPopularity, @SerTotal, @SerBeginDate, @SerEndDate)
     IF @@ERROR <> 0
         ROLLBACK TRAN G1
     ELSE 
@@ -131,41 +127,20 @@ GO
 
 --stored procedure num 2 ria
 CREATE PROCEDURE newSurvey 
-@SurvDate DATE, 
-@MemName VARCHAR(50), 
-@MemDescr VARCHAR(150), 
-@Price NUMERIC(8,2),
-@MemBeginDate DATE, 
-@MemEndDate DATE
+@SurvvDate DATE 
 AS 
 
-IF @SurvDate IS NULL OR @MemName IS NULL OR @MemDescr IS NULL OR @Price IS NULL 
-OR @MemBeginDate IS NULL OR @MemEndDate IS NULL 
+IF @SurvvDate IS NULL 
     BEGIN 
     PRINT 'Parameters cannot be null'
     RAISERROR ('one or more of your parameters are null', 11, 1)
     RETURN 
     END
 
-DECLARE @MID INT 
-
-EXECUTE GetMembershipID 
-@MembershipName = @MemName, 
-@MembershipDescr = @MemDescr, 
-@BeginDate = @MemBeginDate, 
-@EndDate = @MemEndDate, 
-@MembershipID = @MID 
-
-IF @MID IS NULL 
-    BEGIN  
-    PRINT 'MID cannot be null'
-    RAISERROR ('MID is null', 11, 1)
-    RETURN 
-    END
 
 BEGIN TRAN G1
-    INSERT INTO tblSURVEY (MembershipID, MembershipName, MembershipDescr, MembershipPrice, BeginDate, EndDate)
-    VALUES (@CID, @MemName, @MemDescr, @Price, @BeginDate, @EndDate)
+    INSERT INTO tblSURVEY (SurveyDate)
+    VALUES (@SurvvDate)
     IF @@ERROR <> 0
         ROLLBACK TRAN G1
     ELSE 
