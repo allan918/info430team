@@ -1,29 +1,41 @@
 use TV_SHOWS
 Go
 
-Create proc insertPERSON_CREDIT_EPISODE
-@EpisodeName VARCHAR(100), 
-@EpisodeOverview VARCHAR(500), 
-@EpisodeRuntime TIME, 
-@BroadcastDate DATE,
+Create --drop
+proc insertPERSON_CREDIT_EPISODE
+@EpisodeName1 VARCHAR(100), 
+@EpisodeOverview1 VARCHAR(500), 
+@EpisodeRuntime1 TIME, 
+@BroadcastDate1 DATE,
 
-@PersonFname VARCHAR(30), 
-@PersonLname VARCHAR(30), 
-@PersonDOB DATE, 
-@PersonBiography VARCHAR(500), 
-@PersonPopularity INT,
+@PersonFname1 VARCHAR(30), 
+@PersonLname1 VARCHAR(30), 
+@PersonDOB1 DATE, 
 
-@CreditName VARCHAR(50),
-@CreditDescr VARCHAR(150),
-@Character Varchar(50)
+@CreditName1 VARCHAR(50),
+@Character1 Varchar(50)
 as
+if @EpisodeName1     is null or
+   @EpisodeOverview1 is null or
+   @EpisodeRuntime1  is null or
+   @BroadcastDate1 	 is null or
+   @PersonFname1 	 is null or
+   @PersonLname1	 is null or
+   @PersonDOB1 		 is null or
+   @CreditName1 	 is null or
+   @Character1 		 is null 
+   begin
+   raiserror('parameter cannot be null', 11, 1)
+   return
+   end
+
 Declare @EpisodeID int
 Declare @PersonID int
 Declare @CreditID int 
-Exec GetEpisodeID  @EpisodeName     =@EpisodeName     
-				  ,@EpisodeOverview	=@EpisodeOverview	
-				  ,@EpisodeRuntime 	=@EpisodeRuntime 	
-				  ,@BroadcastDate 	=@BroadcastDate 
+Exec GetEpisodeID  @EpisodeName     =@EpisodeName1     
+				  ,@EpisodeOverview	=@EpisodeOverview1	
+				  ,@EpisodeRuntime 	=@EpisodeRuntime1 	
+				  ,@BroadcastDate 	=@BroadcastDate1
 				  ,@EpisodeID = @EpisodeID out
 if @EpisodeID is null
 begin
@@ -31,11 +43,9 @@ raiserror('id is null', 11,1 )
 return
 end 
 
-Exec GetPersonID @PersonFname        = @PersonFname 
-				 ,@PersonLname		 = @PersonLname
-				 ,@PersonDOB 		 = @PersonDOB 
-				 ,@PersonBiography 	 = @PersonBiography 
-				 ,@PersonPopularity	 = @PersonPopularity
+Exec GetPersonID @PersonFname        = @PersonFname1
+				 ,@PersonLname		 = @PersonLname1
+				 ,@PersonDOB 		 = @PersonDOB1 
 				 ,@PersonID = @PersonID out
 if @PersonID is null
 begin
@@ -43,8 +53,7 @@ raiserror('id is null', 11,1 )
 return
 end 
 
-Exec [dbo].[getCreditID] @CreditName  = @CreditID
-						 ,@CreditDescr = @CreditDescr
+Exec [dbo].[getCreditID] @CreditName  = @CreditName1
 						 ,@CreditID = @CreditID out
 if @CreditID is null
 begin
@@ -59,7 +68,7 @@ EpisodeID
 ,PersonID 
 ,[Character]
 )
-values(@EpisodeID, @CreditID, @PersonID, @Character)
+values(@EpisodeID, @CreditID, @PersonID, @Character1)
 
 if @@error <> 0
 rollback tran G1
@@ -69,21 +78,33 @@ Go
 
 
 
-Create proc insert_Episode_genre
-@GenreName VARCHAR(100),
-@GenreDesc VARCHAR(150),
+Create --drop
+proc insert_Episode_genre
+@GenreName1 VARCHAR(100),
 
-@EpisodeName VARCHAR(100), 
-@EpisodeOverview VARCHAR(500), 
-@EpisodeRuntime TIME, 
-@BroadcastDate DATE
+@EpisodeName1 VARCHAR(100), 
+@EpisodeOverview1 VARCHAR(500), 
+@EpisodeRuntime1 TIME, 
+@BroadcastDate1 DATE
 as
+
+if @GenreName1       is null or
+   @EpisodeName1 	is null or
+   @EpisodeOverview1 is null or
+   @EpisodeRuntime1 	is null or
+   @BroadcastDate1 	is null 
+begin
+raiserror('parameter is null', 11,1)
+return
+end
+
+
 Declare @EpisodeID int
 Declare @GenreID int
-Exec GetEpisodeID  @EpisodeName     =@EpisodeName     
-				  ,@EpisodeOverview	=@EpisodeOverview	
-				  ,@EpisodeRuntime 	=@EpisodeRuntime 	
-				  ,@BroadcastDate 	=@BroadcastDate 
+Exec GetEpisodeID  @EpisodeName     =@EpisodeName1 
+				  ,@EpisodeOverview	=@EpisodeOverview1	
+				  ,@EpisodeRuntime 	=@EpisodeRuntime1 	
+				  ,@BroadcastDate 	=@BroadcastDate1 
 				  ,@EpisodeID = @EpisodeID out
 if @EpisodeID is null
 begin
@@ -91,8 +112,7 @@ raiserror('id is null', 11,1 )
 return
 end 
 
-Exec  GetGenreID @GenreName= @GenreName  
-				 ,@GenreDesc = @GenreDesc 
+Exec  GetGenreID @GenreName= @GenreName1
 				 ,@GenreID = @GenreID out
 if @GenreID is null
 begin
