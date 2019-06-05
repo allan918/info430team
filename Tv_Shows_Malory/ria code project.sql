@@ -140,7 +140,7 @@ CREATE PROCEDURE newSurvey
 AS 
 
 IF @SurvDate IS NULL OR @MemName IS NULL OR @MemDescr IS NULL OR @Price IS NULL 
-OR @BeginDate IS NULL OR @EndDate IS NULL 
+OR @MemBeginDate IS NULL OR @MemEndDate IS NULL 
     BEGIN 
     PRINT 'Parameters cannot be null'
     RAISERROR ('one or more of your parameters are null', 11, 1)
@@ -171,4 +171,49 @@ BEGIN TRAN G1
     ELSE 
         COMMIT TRAN G1
 
+GO 
+
+--computed column num 1 ria
+--NUMBER OF CUSTOMERS WHO WATCH Parks and Rec in the comedy genre
+
+CREATE FUNCTION fn_NumOfCustomersThatLikeToLaugh(@CustomerID INT)
+RETURNS INT 
+AS 
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT SUM(C.CustomerID)
+        FROM tblCUSTOMER C 
+            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblEpisode E ON PE.EpisodeID = E.EpisodeID
+            JOIN tblEPISODE_GENRE EG ON E.EpisodeID = EG.EpisodeID
+            JOIN tblGENRE G ON EG.GenreID = G.GenreID
+        WHERE E.[EpisodeName] = 'Parks and Rec' AND G.GenreName = 'Comedy')
+        RETURN @Ret
+END 
+GO 
+ALTER TABLE tblCUSTOMER
+ADD TotalFunnyPeople AS (dbo.fn_NumOfCustomersThatLikeToLaugh(CustomerID))
+GO 
+
+--computed column num 2 ria
+--Number of memberships that have involved the use of both Netflix and Hulu
+
+CREATE FUNCTION fn_NumOfMemsThatThinkNetAndHuluIsCool(@MembershipID INT)
+RETURNS INT 
+AS 
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT SUM(M.MembershipID)
+        FROM tblMEMBERSHIP M
+            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblPLATFORM P ON PE.PlatformID = P.PlatformID
+        WHERE P.[PlatformName] = 'Netflix' AND P.PlatformName = 'Hulu')
+        RETURN @Ret
+END 
+GO 
+ALTER TABLE tblCUSTOMER
+ADD TotalPopularPlatformMems AS (dbo.fn_NumOfMemsThatThinkNetAndHuluIsCool(CustomerID))
 GO 
