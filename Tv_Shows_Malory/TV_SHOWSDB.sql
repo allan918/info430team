@@ -1,19 +1,18 @@
 CREATE DATABASE TV_SHOWS 
-
+Use TV_SHOWS
 CREATE TABLE tblLANGUAGE (LanguageID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
                             LanguageCode VARCHAR(5) NOT NULL, 
                             LanguageName VARCHAR(50) NOT NULL)
 GO 
-CREATE TABLE tblSERIES (SeriesID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
+Create TABLE tblSERIES (SeriesID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
                         LanguageID INT FOREIGN KEY REFERENCES tblLANGUAGE (LanguageID) NOT NULL, 
                         SeriesName VARCHAR(100) NOT NULL, 
                         SeriesOverview VARCHAR(500) NOT NULL, 
                         SeriesPopularity INT NULL, 
                         SeasonTotal INT NOT NULL, 
-                        SeriesBeginDate DATE NOT NULL, 
-                        SeriesEndDate Date NULL)
+                        SeriesBeginDate int NOT NULL, 
+                        SeriesEndDate int NULL)
 GO 
-
 
 CREATE TABLE tblEPISODE (EpisodeID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
                         SeriesID INT FOREIGN KEY REFERENCES tblSERIES (SeriesID) NOT NULL, 
