@@ -39,23 +39,6 @@ IF @SID IS NULL
     RETURN 
     END
 
---get episodeID
-DECLARE @EID INT 
-
-EXECUTE GetEpisodeID
-@EpisodeName = @EpName, 
-@EpisodeOverview = @EpOverview, 
-@EpisodeRuntime = @EpRunTime, 
-@BroadcastDate = @BroadDate,
-@EpisodeID = @EID OUTPUT 
-
-IF @EID IS NULL 
-    BEGIN  
-    PRINT 'EID cannot be null'
-    RAISERROR ('EID is null', 11, 1)
-    RETURN 
-    END
-
 
 BEGIN TRAN G1
     INSERT INTO tblEPISODE (EpisodeID, SeriesID, EpisodeName, EpisodeOverview, EpisodeRuntime, BroadcastDate)
@@ -77,20 +60,6 @@ IF @LangCode IS NULL OR @LangName IS NULL
     BEGIN 
     PRINT 'Parameters cannot be null'
     RAISERROR ('One or more of your parameters is null', 11, 1)
-    RETURN 
-    END
-
-DECLARE @LID INT 
-
-EXECUTE GetLanguageID
-@LanguageCode = @LangCode,
-@LanguageName = @LangName,
-@LanguageID = @LID OUTPUT 
-
-IF @LID IS NULL 
-    BEGIN  
-    PRINT 'LID cannot be null'
-    RAISERROR ('LID is null', 11, 1)
     RETURN 
     END
 

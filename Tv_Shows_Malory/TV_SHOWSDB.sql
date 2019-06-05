@@ -13,7 +13,6 @@ Create TABLE tblSERIES (SeriesID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
                         SeriesBeginDate int NOT NULL, 
                         SeriesEndDate int NULL)
 GO 
-
 CREATE TABLE tblEPISODE (EpisodeID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
                         SeriesID INT FOREIGN KEY REFERENCES tblSERIES (SeriesID) NOT NULL, 
                         EpisodeName VARCHAR(100) NOT NULL, 
