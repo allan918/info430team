@@ -128,3 +128,29 @@ ADD CONSTRAINT CK_OnlyHuluOrNetflixInSpain
 CHECK (dbo.fn_OnlyHuluOrNetflixInSpain() = 0) 
 
 GO 
+
+-- 4) business rule: users from Germany can only use platforms if they became a member before 2015
+CREATE FUNCTION fn_Germany2015Membership()
+RETURNS INT 
+AS
+BEGIN 
+DECLARE @Ret INT = 0
+
+IF EXISTS (SELECT * FROM tblCUSTOMER C
+            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID 
+            JOIN tblDOWNLOAD_EPISODE DE ON M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblPLATFORM P ON PE.PlatformID = P.PlatformID
+            WHERE C.Country = 'Germany' AND M.BeginDate < '01-01-2015')
+    BEGIN 
+    SET @Ret = 1
+    END 
+RETURN @Ret
+END
+GO 
+
+ALTER TABLE tblPLATFORM 
+ADD CONSTRAINT CK_Germany2015Membership
+CHECK (dbo.fn_Germany2015Membership() = 0) 
+
+GO 
