@@ -1,5 +1,7 @@
-CREATE DATABASE TV_SHOWS 
-Use TV_SHOWS
+CREATE DATABASE Group13_TV_SHOWS 
+USE Group13_TV_SHOWS
+
+
 CREATE TABLE tblLANGUAGE (LanguageID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
                             LanguageCode VARCHAR(5) NOT NULL, 
                             LanguageName VARCHAR(50) NOT NULL)
@@ -72,8 +74,8 @@ CREATE TABLE tblMEMBERSHIP (MembershipID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
                             MembershipName VARCHAR(50) NOT NULL,
                             MembershipDescr VARCHAR(150) NOT NULL, 
                             MembershipPrice NUMERIC(8,2) NOT NULL, 
-                            BeginDate DATETIME NOT NULL, 
-                            EndDate DATETIME NULL)
+                            BeginDate DATE NOT NULL, 
+                            EndDate DATE NULL)
 GO
 
 CREATE TABLE tblDOWNLOAD_EPISODE (DownloadEpisodeID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
@@ -82,6 +84,7 @@ CREATE TABLE tblDOWNLOAD_EPISODE (DownloadEpisodeID INT IDENTITY(1,1) PRIMARY KE
                                 DownloadDateTime DATETIME NOT NULL)
 GO
 CREATE TABLE tblSURVEY (SurveyID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
+                        SurveyName VARCHAR(100) NOT NULL,
                         SurveyDate DATETIME NOT NULL)
 GO 
 CREATE TABLE tblQUESTION_TYPE (QuestionTypeID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
@@ -89,8 +92,7 @@ CREATE TABLE tblQUESTION_TYPE (QuestionTypeID INT IDENTITY(1,1) PRIMARY KEY NOT 
                                 QuestionTypeDescr VARCHAR(100) NULL)
 GO 
 CREATE TABLE tblQUESTION (QuestionID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
-                        QuestionTypeID INT FOREIGN KEY REFERENCES tblQUESTION_TYPE NOT NULL, 
-                        QuestionDate DATETIME NOT NULL, 
+                        QuestionTypeID INT FOREIGN KEY REFERENCES tblQUESTION_TYPE NOT NULL,  
                         QuestionName VARCHAR(150) NOT NULL)
 GO
 CREATE TABLE tblSURVEY_QUESTION (SurveyQuestionID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
