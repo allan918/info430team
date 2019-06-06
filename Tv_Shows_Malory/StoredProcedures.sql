@@ -69,11 +69,10 @@ WHERE @PersonFname = PersonFname
 AND @PersonLname = PersonLname
 AND @PersonDOB = PersonDOB)
 GO
-
 -- GetSeriesID EDITED 
 CREATE PROC GetSeriesID
 @SeriesName VARCHAR(100), 
-@SeriesOutput INT OUTPUT
+@SeriesID INT OUTPUT
 AS
 SET @SeriesID = (SELECT SeriesID FROM tblSERIES
 WHERE @SeriesName = SeriesName)
@@ -88,8 +87,7 @@ SET @PlatformID = (SELECT PlatformID FROM tblPLATFORM
 WHERE @PlatformName = PlatformName)
 GO
 
--- stored procedure 1 
---NewCustomer 
+-- stored procedure 1 NewCustomer 
 CREATE PROCEDURE newCustomer 
 @CustomerFname VARCHAR(30), 
 @CustomerLname VARCHAR(30), 

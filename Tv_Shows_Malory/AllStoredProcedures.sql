@@ -39,7 +39,7 @@ BEGIN TRAN G1
 
 GO 
 
--- new cust Malory 1
+-- new customer  1
 CREATE PROCEDURE newCustomer 
 @CustomerFname VARCHAR(30), 
 @CustomerLname VARCHAR(30), 
@@ -89,7 +89,7 @@ BEGIN TRAN G1
 
 GO 
 
--- Inserting new membership Malory 2
+-- Inserting new membership  2
 CREATE PROC newMembership 
 @CFname VARCHAR(30), 
 @CLname VARCHAR(30), 
