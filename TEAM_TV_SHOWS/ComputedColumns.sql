@@ -129,7 +129,7 @@ GO
 /*Madisens Code*/
 -- 5) computed column: number of customers from Hawaii that watch shows in Swedish
 CREATE --drop
-FUNCTION fn_NumHawaiiCustomersWhoWatchSwedishPrograms(@CustomerID INT)
+FUNCTION fn_NumHawaiiCustomersWhoWatchSwedishShows(@CustomerID INT)
 RETURNS INT 
 AS 
 BEGIN 
@@ -142,18 +142,18 @@ BEGIN
             JOIN tblEPISODE E ON PE.EpisodeID = E.EpisodeID
             JOIN tblSERIES S ON E.SeriesID = S.SeriesID
             JOIN tblLANGUAGE L ON S.LanguageID = L.LanguageID
-        WHERE C.[State] = 'Hawaii' AND L.Language = 'Swedish')
+        WHERE C.[State] = 'Hawaii' AND L.LanguageName = 'Swedish' AND C.CustomerID = @CustomerID)
         RETURN @Ret
 END 
 GO 
 
 ALTER TABLE tblCUSTOMER
-ADD totalHawaiiCustWhoWatchSwedishPrograms AS (dbo.fn_NumHawaiiCustomersWhoWatchSwedishPrograms(CustomerID))
+ADD totalHawaiiCustWhoWatchSwedishShows AS (dbo.fn_NumHawaiiCustomersWhoWatchSwedishShows(CustomerID))
 GO
 
 -- 6) computed column: number of customers who watch any show to do with horror
 CREATE --drop
-FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
+FUNCTION fn_CustomersWhoWatchHorrorShows(@CustomerID INT)
 
 RETURNS INT 
 AS 
@@ -167,11 +167,11 @@ BEGIN
             JOIN tblEpisode E ON PE.EpisodeID = E.EpisodeID
             JOIN tblEPISODE_GENRE EG ON E.EpisodeID = EG.EpisodeID
             JOIN tblGENRE G ON EG.GenreID = G.GenreID
-        WHERE G.GenreName = 'Horror')
+        WHERE G.GenreName = 'Horror' AND C.CustomerID = @CustomerID)
         RETURN @Ret
 END 
 GO 
 ALTER TABLE tblCUSTOMER
 
-ADD TotalCustomersWhoWatchHorror AS (dbo.fn_CustomersWhoWatchHorror(CustomerID))
+ADD TotalCustomersWhoWatchHorrorShows AS (dbo.fn_CustomersWhoWatchHorrorShows(CustomerID))
 GO 
