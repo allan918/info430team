@@ -92,8 +92,7 @@ CREATE TABLE tblQUESTION_TYPE (QuestionTypeID INT IDENTITY(1,1) PRIMARY KEY NOT 
                                 QuestionTypeDescr VARCHAR(100) NULL)
 GO 
 CREATE TABLE tblQUESTION (QuestionID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
-                        QuestionTypeID INT FOREIGN KEY REFERENCES tblQUESTION_TYPE NOT NULL, 
-                        QuestionDate DATETIME NOT NULL, 
+                        QuestionTypeID INT FOREIGN KEY REFERENCES tblQUESTION_TYPE NOT NULL,  
                         QuestionName VARCHAR(150) NOT NULL)
 GO
 CREATE TABLE tblSURVEY_QUESTION (SurveyQuestionID INT IDENTITY(1,1) PRIMARY KEY NOT NULL, 
