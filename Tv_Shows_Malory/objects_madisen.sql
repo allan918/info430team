@@ -116,5 +116,62 @@ CHECK (dbo.fn_Germany2015Membership() = 0)
 GO 
 
 -- 5) computed column: number of memberships that contained customers who were 18 and below
+CREATE FUNCTION fn_NumOf18AndUnderMemberships(@CustomerID INT)
+RETURNS INT 
+AS
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT SUM(C.CustomerID)
+        FROM tblCUSTOMER C 
+        JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+    WHERE C.[CustDOB] <= GetDate() - (365.25*18))
+    RETURN @Ret
+END
+GO
+
+ALTER TABLE tblCUSTOMER 
+ADD TotalNumMembers18AndUnder AS (dbo.fn_NumOf18AndUnderMemberships(CustomerID))
+GO
+
 -- 6) computed column: number of customers who watch any show to do with horror
--- 
+CREATE FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
+
+RETURNS INT 
+AS 
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT SUM(C.CustomerID)
+        FROM tblCUSTOMER C 
+            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblEpisode E ON PE.EpisodeID = E.EpisodeID
+            JOIN tblEPISODE_GENRE EG ON E.EpisodeID = EG.EpisodeID
+            JOIN tblGENRE G ON EG.GenreID = G.GenreID
+        WHERE G.GenreName = 'Horror')
+        RETURN @Ret
+END 
+GO 
+ALTER TABLE tblCUSTOMER
+ADD TotalCustomersWhoWatchHorror AS (dbo.fn_CustomersWhoWatchHorror(CustomerID))
+GO 
+
+-- 7) view: find all episodes in action with James Bond 
+CREATE VIEW [JamesBondEpisodeNames] AS 
+SELECT EpisodeName
+FROM tblPERSON P
+JOIN tblPERSON_CREDIT_EPISODE PCE ON P.PersonID = PCE.PersonID
+JOIN tblEPISODE E ON PCE.EpisodeID = E.EpisodeID
+WHERE P.PersonFName = 'James' AND P.PersonLname = 'Bond'
+GO
+
+-- 8) view: find customers who are 20 and watch romance shows that have Blake Lively in it 
+CREATE VIEW [BlakeLivelyFans] AS
+SELECT P.PersonID, PersonFname, PersonLname 
+FROM tblPERSON P
+JOIN tblPERSON_CREDIT_EPISODE PCE ON P.PersonID = PCE.PersonID
+JOIN tblEPISODE E ON PCE.EpisodeID = E.EpisodeID
+JOIN tblEPISODE_GENRE EG ON E.EpisodeID = EG.EpisodeID
+JOIN tblGENRE G ON EG.GenreID = G.GenreID
+WHERE P.PersonFName = 'Blake' AND P.PersonLname = 'Lively'
+AND G.GenreName = 'Romance'
