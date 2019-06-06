@@ -101,11 +101,7 @@ GO
 ALTER TABLE tblCUSTOMER
 ADD TotalTexansWhoWatchManyPlatformTV AS (dbo.fn_NumOfCustomersFromTexasWatchManyPlatform(CustomerID))
 GO 
-SELECT * From tblCUSTOMER 
 
-ALTER TABLE tblCUSTOMER
-ADD TotalTexans AS (dbo.fn_NumOfCustomersFromTexasWatchNetflix(CustomerID))
-GO 
 
 CREATE --drop
  FUNCTION fn_numberOfCustomersWatchGossipGirl(@CustomerID INT) 
