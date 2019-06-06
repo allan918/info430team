@@ -120,7 +120,7 @@ BEGIN
             JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
             JOIN tblEPISODE E ON PE.EpisodeID = E.EpisodeID
             JOIN tblSERIES S ON E.SeriesID = S.SeriesID
-        WHERE S.SeriesName = 'Gosip Girl')
+        WHERE S.SeriesName = 'Gossip Girl')
     RETURN @Ret
 END 
 GO 
@@ -129,24 +129,29 @@ ALTER TABLE tblCUSTOMER
 ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(CustomerID))
 GO 
 /*Madisens Code*/
--- 5) computed column: number of memberships that contained customers who were 18 and below
---CREATE --drop
---FUNCTION fn_NumOf18AndUnderMemberships(@CustomerID INT)
---RETURNS INT 
---AS
---BEGIN 
---    DECLARE @Ret INT = (
---        SELECT Count(C.CustomerID)
---        FROM tblCUSTOMER C 
---        JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
---    WHERE C.[CustDOB] <= GetDate() - (365.25*18))
---    RETURN @Ret
---END
---GO
---
---ALTER TABLE tblCUSTOMER 
---ADD TotalNumMembers18AndUnder AS (dbo.fn_NumOf18AndUnderMemberships(CustomerID))
---GO
+-- 5) computed column: number of customers from Hawaii that watch shows in Swedish
+CREATE --drop
+FUNCTION fn_NumHawaiiCustomersWhoWatchSwedishPrograms(@CustomerID INT)
+RETURNS INT 
+AS 
+BEGIN 
+    DECLARE @Ret INT = (
+        SELECT Count(C.CustomerID)
+        FROM tblCUSTOMER C 
+            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
+            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
+            JOIN tblEPISODE E ON PE.EpisodeID = E.EpisodeID
+            JOIN tblSERIES S ON E.SeriesID = S.SeriesID
+            JOIN tblLANGUAGE L ON S.LanguageID = L.LanguageID
+        WHERE C.[State] = 'Hawaii' AND L.Language = 'Swedish')
+        RETURN @Ret
+END 
+GO 
+
+ALTER TABLE tblCUSTOMER
+ADD totalHawaiiCustWhoWatchSwedishPrograms AS (dbo.fn_NumHawaiiCustomersWhoWatchSwedishPrograms(CustomerID))
+GO
 
 -- 6) computed column: number of customers who watch any show to do with horror
 CREATE --drop
