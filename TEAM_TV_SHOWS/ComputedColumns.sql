@@ -104,7 +104,7 @@ GO
 
 
 CREATE --drop
- FUNCTION fn_numberOfCustomersWatchGossipGirl(@CustomerID INT) 
+FUNCTION fn_CustomersWatchGossipGirlfromPensilvania(@CustomerID INT) 
 RETURNS INT 
 AS
 BEGIN 
@@ -116,14 +116,16 @@ BEGIN
             JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
             JOIN tblEPISODE E ON PE.EpisodeID = E.EpisodeID
             JOIN tblSERIES S ON E.SeriesID = S.SeriesID
-        WHERE S.SeriesName = 'Gossip Girl')
+        WHERE S.SeriesName = 'Gossip Girl' AND C.[State] = 'Pennsylvania' AND C.CustomerID = @CustomerID)
     RETURN @Ret
 END 
 GO 
 
 ALTER TABLE tblCUSTOMER 
+
 ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(CustomerID))
 GO 
+
 /*Madisens Code*/
 -- 5) computed column: number of customers from Hawaii that watch shows in Swedish
 CREATE --drop
