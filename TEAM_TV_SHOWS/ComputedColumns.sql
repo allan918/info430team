@@ -144,6 +144,10 @@ BEGIN
 END 
 GO 
 
+ALTER TABLE tblCUSTOMER
+ADD totalHawaiiCustWhoWatchSwedishPrograms AS (dbo.fn_NumHawaiiCustomersWhoWatchSwedishPrograms(CustomerID))
+GO
+
 -- 6) computed column: number of customers who watch any show to do with horror
 CREATE --drop
 FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
