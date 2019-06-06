@@ -260,3 +260,11 @@ GO
 ALTER TABLE tblCUSTOMER 
 ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(CustomerID))
 GO 
+
+Create proc getCreditID
+@CreditName VARCHAR(50),
+@CreditDescr VARCHAR(150),
+@CreditID int out 
+as
+Set @CreditID =(Select CreditID from tblCREDIT where @CreditName = @CreditName and @CreditDescr = @CreditDescr)
+Go

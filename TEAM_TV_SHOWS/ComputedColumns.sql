@@ -2,12 +2,13 @@
 /*Rias code*/
 --computed column num 1 ria
 --NUMBER OF CUSTOMERS WHO WATCH Parks and Rec in the comedy genre
-CREATE FUNCTION fn_NumOfCustomersThatLikeToLaugh(@CustomerID INT)
+CREATE --drop
+ FUNCTION fn_NumOfCustomersThatLikeToLaugh(@CustomerID INT)
 RETURNS INT 
 AS 
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT SUM(C.CustomerID)
+        SELECT Count(C.CustomerID)
         FROM tblCUSTOMER C 
             JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
             JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
@@ -25,12 +26,13 @@ GO
 --computed column num 2 ria
 --Number of memberships that have involved the use of both Netflix and Hulu
 
-CREATE FUNCTION fn_NumOfMemsThatThinkNetAndHuluIsCool(@MembershipID INT)
+CREATE --drop
+FUNCTION fn_NumOfMemsThatThinkNetAndHuluIsCool(@MembershipID INT)
 RETURNS INT 
 AS 
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT SUM(M.MembershipID)
+        SELECT Count(M.MembershipID)
         FROM tblMEMBERSHIP M
             JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
             JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
@@ -79,12 +81,13 @@ Alter Table tblCustomer
 Add Count_Download_Netflix as (dbo.Calculate_download_netflix(CustomerID))
 Go
 /*Malorys Code*/
-CREATE FUNCTION fn_NumOfCustomersFromTexasWatchNetflix(@CustomerID INT)
+CREATE --drop
+ FUNCTION fn_NumOfCustomersFromTexasWatchNetflix(@CustomerID INT)
 RETURNS INT 
 AS 
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT SUM(C.CustomerID)
+        SELECT Count(C.CustomerID)
         FROM tblCUSTOMER C 
             JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
             JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
@@ -94,16 +97,18 @@ BEGIN
         RETURN @Ret
 END 
 GO 
+
 ALTER TABLE tblCUSTOMER
 ADD TotalTexans AS (dbo.fn_NumOfCustomersFromTexasWatchNetflix(CustomerID))
 GO 
 
-CREATE FUNCTION fn_numberOfCustomersWatchGossipGirl(@CustomerID INT) 
+CREATE --drop
+ FUNCTION fn_numberOfCustomersWatchGossipGirl(@CustomerID INT) 
 RETURNS INT 
 AS
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT SUM(C.CustomerID)
+        SELECT Count(C.CustomerID)
         FROM tblCUSTOMER C
             JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
             JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
@@ -120,31 +125,33 @@ ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(Customer
 GO 
 /*Madisens Code*/
 -- 5) computed column: number of memberships that contained customers who were 18 and below
-CREATE FUNCTION fn_NumOf18AndUnderMemberships(@CustomerID INT)
-RETURNS INT 
-AS
-BEGIN 
-    DECLARE @Ret INT = (
-        SELECT SUM(C.CustomerID)
-        FROM tblCUSTOMER C 
-        JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
-    WHERE C.[CustDOB] <= GetDate() - (365.25*18))
-    RETURN @Ret
-END
-GO
-
-ALTER TABLE tblCUSTOMER 
-ADD TotalNumMembers18AndUnder AS (dbo.fn_NumOf18AndUnderMemberships(CustomerID))
-GO
+--CREATE --drop
+--FUNCTION fn_NumOf18AndUnderMemberships(@CustomerID INT)
+--RETURNS INT 
+--AS
+--BEGIN 
+--    DECLARE @Ret INT = (
+--        SELECT Count(C.CustomerID)
+--        FROM tblCUSTOMER C 
+--        JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
+--    WHERE C.[CustDOB] <= GetDate() - (365.25*18))
+--    RETURN @Ret
+--END
+--GO
+--
+--ALTER TABLE tblCUSTOMER 
+--ADD TotalNumMembers18AndUnder AS (dbo.fn_NumOf18AndUnderMemberships(CustomerID))
+--GO
 
 -- 6) computed column: number of customers who watch any show to do with horror
-ALTER FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
+CREATE --drop
+FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
 
 RETURNS INT 
 AS 
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT COUNT(*)
+        SELECT Count(C.CustomerID)
         FROM tblCUSTOMER C 
             JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
             JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
@@ -157,5 +164,6 @@ BEGIN
 END 
 GO 
 ALTER TABLE tblCUSTOMER
+
 ADD TotalCustomersWhoWatchHorror AS (dbo.fn_CustomersWhoWatchHorror(CustomerID))
 GO 
