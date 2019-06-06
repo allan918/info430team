@@ -1,31 +1,22 @@
 USE TV_SHOWS 
 GO 
 
---GetEpisodeID 
-CREATE PROCEDURE GetEpisodeID 
+--GetEpisodeID edited 
+ALTER PROCEDURE GetEpisodeID 
 @EpisodeName VARCHAR(100), 
-@EpisodeOverview VARCHAR(500), 
-@EpisodeRuntime TIME, 
-@BroadcastDate DATE,
 @EpisodeID INT OUTPUT
 AS
-SET @EpisodeID = (SELECT EpisodeID FROM tblEPISODE WHERE EpisodeName = @EpisodeName AND 
-                EpisodeOverview = @EpisodeOverview AND EpisodeRuntime = @EpisodeRuntime
-                AND BroadcastDate = @BroadcastDate)
+SET @EpisodeID = (SELECT EpisodeID FROM tblEPISODE WHERE EpisodeName = @EpisodeName)
 GO 
 
---GetMembershipID
-CREATE PROCEDURE GetMembershipID 
+--GetMembershipID edited 
+ALTER PROCEDURE GetMembershipID 
 @MembershipName VARCHAR(50), 
-@MembershipDescr VARCHAR(150), 
-@BeginDate DATE, 
-@EndDate DATE, 
+@BeginDate DATE,  
 @MembershipID INT OUTPUT 
 AS 
-SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP WHERE MembershipName = @MembershipName
-                    AND MembershipDescr = @MembershipDescr AND BeginDate = @BeginDate AND EndDate = @EndDate)
+SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP WHERE MembershipName = @MembershipName AND BeginDate = @BeginDate)
 GO 
-
 
 --GetCustID 
 CREATE PROC GetCustID 
@@ -39,26 +30,22 @@ WHERE CustFname = @CustFname AND CustLname = @CustLname
 AND CustDOB = @CustDOB)
 GO 
 
--- GetGenreID
-CREATE PROC GetGenreID
+-- GetGenreID edited
+ALTER PROC GetGenreID
 @GenreName VARCHAR(100),
-@GenreDesc VARCHAR(150),
 @GenreID INT OUTPUT 
 AS
 SET @GenreID = (SELECT GenreID FROM tblGENRE
-WHERE GenreName = @GenreName
-AND GenreDesc = @GenreDesc)
+WHERE GenreName = @GenreName)
 GO
 
--- GetLanguageID
-CREATE PROC GetLanguageID
-@LanguageCode VARCHAR(5),
+-- GetLanguageID edited 
+ALTER PROC GetLanguageID
 @LanguageName VARCHAR(50),
 @LanguageID INT OUTPUT
 AS
 SET @LanguageID = (SELECT LanguageID FROM tblLANGUAGE
-WHERE LanguageCode = @LanguageCode
-AND LanguageName = @LanguageName)
+WHERE LanguageName = @LanguageName)
 GO
 
 -- GetGenderID
@@ -70,51 +57,35 @@ SET @GenderID = (SELECT GenderID FROM tblGender
 WHERE GenderName = @GenderName)
 GO 
 
--- GetPersonID
+-- GetPersonID edited 
 CREATE PROC GetPersonID
 @PersonFname VARCHAR(30), 
 @PersonLname VARCHAR(30), 
 @PersonDOB DATE, 
-@PersonBiography VARCHAR(500), 
-@PersonPopularity INT,
 @PersonID INT OUTPUT
 AS
 SET @PersonID = (SELECT PersonID FROM tblPERSON
 WHERE @PersonFname = PersonFname
 AND @PersonLname = PersonLname
-AND @PersonDOB = PersonDOB
-AND @PersonBiography = PersonBiography
-AND @PersonPopularity = PersonPopularity)
+AND @PersonDOB = PersonDOB)
 GO
 
--- GetSeriesID (fix this!!!!!)
+-- GetSeriesID EDITED 
 CREATE PROC GetSeriesID
 @SeriesName VARCHAR(100), 
-@SeriesOverview VARCHAR(500), 
-@SeriesPopularity INT, 
-@SeasonTotal INT, 
-@SeriesBeginDate DATE, 
-@SeriesEndDate DATE,
 @SeriesOutput INT OUTPUT
 AS
 SET @SeriesID = (SELECT SeriesID FROM tblSERIES
-WHERE @SeriesName = SeriesName
-AND @SeriesOverview = SeriesOverview
-AND @SeriesPopularity = SeriesPopularity
-AND @SeasonTotal = SeasonTotal
-AND @SeriesBeginDate = SeriesBeginDate
-AND @SeriesEndDate = SeriesEndDate)
+WHERE @SeriesName = SeriesName)
 GO
 
--- Get PlatformID
+-- Get PlatformID edited 
 CREATE PROC GetPlatformID
 @PlatformName VARCHAR(50),
-@PlatformDescr VARCHAR(150),
 @PlatformID INT OUTPUT
 AS
 SET @PlatformID = (SELECT PlatformID FROM tblPLATFORM
-WHERE @PlatformName = PlatformName
-AND @PlatformDescr = PlatformDescr)
+WHERE @PlatformName = PlatformName)
 GO
 
 -- stored procedure 1 

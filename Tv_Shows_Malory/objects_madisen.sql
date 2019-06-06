@@ -1,19 +1,14 @@
--- 1) stored procedure: new episode
-CREATE PROCEDURE newEpisode
+-- 1) stored procedure: new episode EDITED 
+
+ALTER PROCEDURE newEpisode
 @EpName VARCHAR(30), 
 @EpOverview VARCHAR(30), 
-@EpRunTime TIME,
+@EpRunTime int,
 @BroadDate DATE, 
-@SerName VARCHAR(50),
-@SerPopularity INT,
-@SerTotal INT,
-@SerOverview VARCHAR(50),
-@SerBeginDate DATE, 
-@SerEndDate DATE
+@SerName VARCHAR(50)
 AS 
 
-IF @EpName IS NULL OR @EpOverview IS NULL OR @EpRunTime IS NULL OR @SerName IS NULL OR @SerPopularity IS NULL OR @SerTotal IS NULL OR 
-@SerOverview IS NULL OR @SerBeginDate IS NULL OR @SerEndDate IS NULL 
+IF @EpName IS NULL OR @EpOverview IS NULL OR @EpRunTime IS NULL OR @SerName IS NULL 
     BEGIN 
     PRINT 'Parameters cannot be null'
     RAISERROR ('One or more of your parameters is null', 11, 1)
@@ -25,11 +20,6 @@ DECLARE @SID INT
 -- get seriesID
 EXECUTE GetSeriesID
 @SeriesName = @SerName, 
-@SeriesOverview = @SerOverview, 
-@SeriesPopularity = @SerPopularity, 
-@SeasonTotal = @SerTotal,
-@SeriesBeginDate = @SerBeginDate,
-@SeriesEndDate = @SerEndDate,
 @SeriesID = @SID OUTPUT 
 
 IF @SID IS NULL 
@@ -41,14 +31,15 @@ IF @SID IS NULL
 
 
 BEGIN TRAN G1
-    INSERT INTO tblEPISODE (EpisodeID, SeriesID, EpisodeName, EpisodeOverview, EpisodeRuntime, BroadcastDate)
-    VALUES (@EID, @SID, @EpName, @EpOverview, @EpRunTime, @BroadDate)
+    INSERT INTO tblEPISODE (SeriesID, EpisodeName, EpisodeOverview, EpisodeRuntime, BroadcastDate)
+    VALUES (@SID, @EpName, @EpOverview, @EpRunTime, @BroadDate)
     IF @@ERROR <> 0
         ROLLBACK TRAN G1
     ELSE 
         COMMIT TRAN G1
 
 GO 
+
 
 -- 2) stored procedure: new language
 CREATE PROCEDURE newLanguage

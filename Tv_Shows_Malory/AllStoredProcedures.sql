@@ -157,3 +157,44 @@ BEGIN TRAN G1
         COMMIT TRAN G1
 GO 
 
+--stored procedure num 1 ria edited
+
+ALTER PROCEDURE uspnewseries
+@SerName VARCHAR(50),
+@SerPopularity INT,
+@SerTotal INT,
+@SerOverview VARCHAR(50),
+@SerBeginDate INT, 
+@LangName VARCHAR(50)
+AS 
+
+IF @SerName IS NULL OR @SerPopularity IS NULL OR @SerTotal IS NULL OR 
+@SerOverview IS NULL OR @SerBeginDate IS NULL OR @LangName IS NULL 
+    BEGIN 
+    PRINT 'Parameters cannot be null'
+    RAISERROR ('one or more of your parameters are null', 11, 1)
+    RETURN 
+    END
+DECLARE @LID INT 
+
+EXECUTE GetLanguageID
+@LanguageName = @LangName,
+@LanguageID  = @LID OUTPUT 
+
+IF @LID IS NULL 
+    BEGIN  
+    PRINT 'LID cannot be null'
+    RAISERROR ('LID is null', 11, 1)
+    RETURN 
+    END
+
+BEGIN TRAN G1
+    INSERT INTO tblSERIES (LanguageID, SeriesName, SeriesOverview, SeriesPopularity, SeasonTotal, SeriesBeginDate)
+    VALUES (@LID, @SerName, @SerOverview, @SerPopularity, @SerTotal, @SerBeginDate)
+    IF @@ERROR <> 0
+        ROLLBACK TRAN G1
+    ELSE 
+        COMMIT TRAN G1
+
+GO 
+
