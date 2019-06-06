@@ -65,14 +65,14 @@ GO
 --View 2
 -- Find all episodes (The Rock) is in on (Netflix)
 -- not sure how to get the collective episodes 
-CREATE VIEW [TheRockOnNetflix] AS 
+CREATE VIEW [TheRockOnNetflix2] AS 
 SELECT P.PersonID, P.PersonFname, P.PersonLname 
 FROM tblPERSON P
 JOIN tblPERSON_CREDIT_EPISODE PCE ON P.PersonID = PCE.PersonID
 JOIN tblEPISODE E ON PCE.EpisodeID = E.EpisodeID
 JOIN tblPLATFORM_EPISODE PE ON E.EpisodeID = PE.EpisodeID
 JOIN tblPLATFORM PL ON PE.PlatformID = PL.PlatformID
-WHERE P.PersonFName = 'The' AND P.PersonLname = 'Rock' AND .PersonLname = 'Perry'
+WHERE P.PersonFName = 'The' AND P.PersonLname = 'Perry'
 AND PL.PlatformName = 'Netflix'
 GO 
 
