@@ -80,23 +80,28 @@ Go
 Alter Table tblCustomer
 Add Count_Download_Netflix as (dbo.Calculate_download_netflix(CustomerID))
 Go
+
 /*Malorys Code*/
-CREATE --drop
- FUNCTION fn_NumOfCustomersFromTexasWatchNetflix(@CustomerID INT)
+create  --drop
+ FUNCTION fn_NumOfCustomersFromTexasWatchManyPlatform(@PlatformID INT)
 RETURNS INT 
 AS 
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT Count(C.CustomerID)
-        FROM tblCUSTOMER C 
-            JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
-            JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
-            JOIN tblPLATFORM_EPISODE PE ON DE.PlatformEpisodeID = PE.PlatformEpisodeID
-            JOIN tblPLATFORM P ON PE.PlatformID = P.PlatformID
-        WHERE C.[State] = 'Texas' AND P.PlatformName = 'Netflix')
+        SELECT DISTINCT Count(P.PlatformID)
+        FROM tblPLATFORM P 
+        JOIN tblPLATFORM_EPISODE PE ON P.PlatformID = PE.PlatformID
+        JOIN tblDOWNLOAD_EPISODE DE ON PE.PlatformEpisodeID = DE.PlatformEpisodeID
+        JOIN tblMEMBERSHIP M ON DE.MembershipID = M.MembershipID
+        JOIN tblCUSTOMER C ON M.CustomerID = C.CustomerID
+        WHERE C.[State] = 'Texas' AND C.CustomerID = @PlatformID)
         RETURN @Ret
 END 
 GO 
+ALTER TABLE tblCUSTOMER
+ADD TotalTexansWhoWatchManyPlatformTV AS (dbo.fn_NumOfCustomersFromTexasWatchManyPlatform(CustomerID))
+GO 
+SELECT * From tblCUSTOMER 
 
 ALTER TABLE tblCUSTOMER
 ADD TotalTexans AS (dbo.fn_NumOfCustomersFromTexasWatchNetflix(CustomerID))
