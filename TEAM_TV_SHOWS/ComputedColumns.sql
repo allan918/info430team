@@ -138,13 +138,13 @@ ADD TotalNumMembers18AndUnder AS (dbo.fn_NumOf18AndUnderMemberships(CustomerID))
 GO
 
 -- 6) computed column: number of customers who watch any show to do with horror
-CREATE FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
+ALTER FUNCTION fn_CustomersWhoWatchHorror(@CustomerID INT)
 
 RETURNS INT 
 AS 
 BEGIN 
     DECLARE @Ret INT = (
-        SELECT SUM(C.CustomerID)
+        SELECT COUNT(*)
         FROM tblCUSTOMER C 
             JOIN tblMEMBERSHIP M ON C.CustomerID = M.CustomerID
             JOIN  tblDOWNLOAD_EPISODE DE ON  M.MembershipID = DE.MembershipID
