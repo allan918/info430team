@@ -47,7 +47,7 @@ CREATE PROC GetGenreID
 AS
 SET @GenreID = (SELECT GenreID FROM tblGENRE
 WHERE GenreName = @GenreName
-AND GenreDesc = @GenreDesc)
+AND GenreDescr = @GenreDesc)
 GO
 
 -- GetLanguageID
@@ -291,3 +291,11 @@ GO
 ALTER TABLE tblCUSTOMER 
 ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(CustomerID))
 GO 
+
+Create proc getCreditID
+@CreditName VARCHAR(50),
+@CreditDescr VARCHAR(150),
+@CreditID int out 
+as
+Set @CreditID =(Select CreditID from tblCREDIT where @CreditName = @CreditName and @CreditDescr = @CreditDescr)
+Go
