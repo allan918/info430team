@@ -114,3 +114,7 @@ ADD CONSTRAINT CK_Germany2015Membership
 CHECK (dbo.fn_Germany2015Membership() = 0) 
 
 GO 
+
+-- 5) computed column: number of memberships that contained customers who were 18 and below
+-- 6) computed column: number of customers who watch any show to do with horror
+-- 
