@@ -1,5 +1,12 @@
 USE Group13_TV_SHOWS
 GO 
+-- Get credit ID 
+CREATE PROCEDURE GetCredit
+@CreditName VARCHAR(50), 
+@CreditID INT OUTPUT 
+AS 
+SET @CreditID = (SELECT CreditID FROM tblCREDIT WHERE CreditName = @CreditName)
+GO
 --GetEpisodeID 
 CREATE PROCEDURE GetEpisodeID 
 @EpisodeName VARCHAR(100), 
@@ -7,13 +14,14 @@ CREATE PROCEDURE GetEpisodeID
 AS
 SET @EpisodeID = (SELECT EpisodeID FROM tblEPISODE WHERE EpisodeName = @EpisodeName)
 GO 
---GetMembershipID edited 
+--GetMembershipID  
 CREATE PROCEDURE GetMembershipID 
 @MembershipName VARCHAR(50), 
 @BeginDate DATE,  
 @MembershipID INT OUTPUT 
 AS 
-SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP WHERE MembershipName = @MembershipName AND BeginDate = @BeginDate)
+SET @MembershipID = (SELECT MembershipID FROM tblMEMBERSHIP 
+WHERE MembershipName = @MembershipName AND BeginDate = @BeginDate)
 GO 
 --GetCustID 
 CREATE PROC GetCustID 
@@ -26,7 +34,7 @@ SET @CustID = (Select CustomerID FROM tblCUSTOMER
 WHERE CustFname = @CustFname AND CustLname = @CustLname 
 AND CustDOB = @CustDOB)
 GO 
--- GetGenreID edited
+-- GetGenreID 
 CREATE PROC GetGenreID
 @GenreName VARCHAR(100),
 @GenreID INT OUTPUT 
@@ -34,7 +42,7 @@ AS
 SET @GenreID = (SELECT GenreID FROM tblGENRE
 WHERE GenreName = @GenreName)
 GO
--- GetLanguageID edited 
+-- GetLanguageID  
 CREATE PROC GetLanguageID
 @LanguageName VARCHAR(50),
 @LanguageID INT OUTPUT
@@ -50,7 +58,7 @@ AS
 SET @GenderID = (SELECT GenderID FROM tblGender
 WHERE GenderName = @GenderName)
 GO 
--- GetPersonID edited 
+-- GetPersonID  
 CREATE PROC GetPersonID
 @PersonFname VARCHAR(30), 
 @PersonLname VARCHAR(30), 
@@ -58,29 +66,30 @@ CREATE PROC GetPersonID
 @PersonID INT OUTPUT
 AS
 SET @PersonID = (SELECT PersonID FROM tblPERSON
-WHERE @PersonFname = PersonFname
-AND @PersonLname = PersonLname
-AND @PersonDOB = PersonDOB)
+WHERE PersonFname = @PersonFname
+AND PersonLname = @PersonLname
+AND PersonDOB = @PersonDOB)
 GO
--- GetSeriesID EDITED 
+-- GetSeriesID  
 CREATE PROC GetSeriesID
 @SeriesName VARCHAR(100), 
 @SeriesID INT OUTPUT
 AS
 SET @SeriesID = (SELECT SeriesID FROM tblSERIES
-WHERE @SeriesName = SeriesName)
+WHERE SeriesName = @SeriesName)
 GO
--- Get PlatformID edited 
+-- Get PlatformID  
 CREATE PROC GetPlatformID
 @PlatformName VARCHAR(50),
 @PlatformID INT OUTPUT
 AS
 SET @PlatformID = (SELECT PlatformID FROM tblPLATFORM
-WHERE @PlatformName = PlatformName)
+WHERE PlatformName = @PlatformName)
 GO
 
 /*Madisen's code*/
--- fixed new episode 1
+
+-- new episode 1
 CREATE PROCEDURE newEpisode
 @EpName VARCHAR(30), 
 @EpOverview VARCHAR(30), 
@@ -113,6 +122,7 @@ BEGIN TRAN G1
     ELSE 
         COMMIT TRAN G1
 GO 
+
 --Insert into language 2
 CREATE PROCEDURE newLanguage
 @LangCode VARCHAR(5),
@@ -134,6 +144,7 @@ BEGIN TRAN G1
 GO 
 
 /*Malory's Code*/
+
 -- new customer  1
 CREATE PROCEDURE newCustomer 
 @CustomerFname VARCHAR(30), 
@@ -160,6 +171,7 @@ BEGIN TRAN G1
     ELSE 
         COMMIT TRAN G1
 GO
+
 -- Inserting new membership 2
 CREATE PROC newMembership 
 @CFname VARCHAR(30), 
@@ -200,6 +212,7 @@ BEGIN TRAN G1
 GO 
 
 /*Ria's Code*/
+
 --stored procedure new series 1 
 CREATE PROCEDURE newseries
 @SerName VARCHAR(50),
@@ -234,6 +247,7 @@ BEGIN TRAN G1
     ELSE 
         COMMIT TRAN G1
 GO 
+
 --stored procedure New Survey 2
 Alter PROCEDURE newSurvey 
 @SurvvDate DATE, 
@@ -255,8 +269,9 @@ BEGIN TRAN G1
 GO 
 
 /*Xiefe's Code*/
+
 -- insesrt person credit episode 
-Create --drop
+Create  --drop
 proc insertPERSON_CREDIT_EPISODE
 @EpisodeName1 VARCHAR(100), 
 @PersonFname1 VARCHAR(30), 
@@ -275,13 +290,13 @@ if @EpisodeName1 is null or
    raiserror('parameter cannot be null', 11, 1)
    return
    end
-Declare @EpisodeID int
-Declare @PersonID int
-Declare @CreditID int 
+Declare @EID int
+Declare @PID int
+Declare @CID int 
 Exec GetEpisodeID  
 @EpisodeName = @EpisodeName1,
-@EpisodeID = @EpisodeID out
-if @EpisodeID is null
+@EpisodeID = @EID out
+if @EID is null
 begin
 print 'epsiode id cannot be null'
 raiserror('episode id is null', 11,1 )
@@ -291,17 +306,17 @@ Exec GetPersonID
 @PersonFname = @PersonFname1, 
 @PersonLname = @PersonLname1,
 @PersonDOB = @PersonDOB1 , 
-@PersonID = @PersonID out
-if @PersonID is null
+@PersonID = @PID out
+if @PID is null
 begin
 print 'person id cannot be null'
 raiserror('person id is null', 11,1 )
 return
 end 
-Exec [dbo].[getCreditID] 
+Exec GetCredit  
 @CreditName  = @CreditName1, 
-@CreditID = @CreditID out
-if @CreditID is null
+@CreditID = @CID out
+if @CID is null
 begin
 print 'credit id cannot be null'
 raiserror('credit id is null', 11,1 )
@@ -309,15 +324,15 @@ return
 end 
 Begin tran G1
 insert into tblPERSON_CREDIT_EPISODE(EpisodeID, CreditID , PersonID , [Character])
-values(@EpisodeID, @CreditID, @PersonID, @Character1)
+values(@EID, @CID, @PID, @Character1)
 if @@error <> 0
 rollback tran G1
 else
 commit tran G1
 Go
+
 -- insert episode genre 
-Create --drop
-proc insert_Episode_genre
+CREATE proc insert_Episode_genre
 @GenreName1 VARCHAR(100),
 @EpisodeName1 VARCHAR(100)
 as
@@ -328,12 +343,12 @@ print 'parameters cannot be null'
 raiserror('parameter is null', 11,1)
 return
 end
-Declare @EpisodeID int
-Declare @GenreID int
+Declare @EID int
+Declare @GID int
 Exec GetEpisodeID  
 @EpisodeName = @EpisodeName1, 
-@EpisodeID = @EpisodeID out
-if @EpisodeID is null
+@EpisodeID = @EID out
+if @EID is null
 begin
 print 'episode id cannot be null'
 raiserror('episode id is null', 11,1 )
@@ -341,8 +356,8 @@ return
 end 
 Exec GetGenreID 
 @GenreName = @GenreName1,
-@GenreID = @GenreID out
-if @GenreID is null
+@GenreID = @GID out
+if @GID is null
 begin
 print 'genre id cannot is null'
 raiserror('genre id is null', 11,1 )
@@ -350,7 +365,7 @@ return
 end
 Begin tran G1
 insert into tblEPISODE_GENRE(EpisodeID, GenreID)
-values(@EpisodeID, @GenreID)
+values(@EID, @GID)
 if @@Error <> 0
 rollback tran G1
 Else

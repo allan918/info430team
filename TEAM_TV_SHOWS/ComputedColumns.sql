@@ -1,5 +1,6 @@
 
 /*Rias code*/
+
 --computed column num 1 ria
 --NUMBER OF CUSTOMERS WHO WATCH Parks and Rec in the comedy genre
 CREATE --drop
@@ -23,6 +24,7 @@ GO
 ALTER TABLE tblCUSTOMER
 ADD TotalFunnyPeople AS (dbo.fn_NumOfCustomersThatLikeToLaugh(CustomerID))
 GO 
+
 --computed column num 2 ria
 --Number of memberships that have involved the use of both Netflix and Hulu
 
