@@ -48,6 +48,7 @@ ADD TotalPopularPlatformMems AS (dbo.fn_NumOfMemsThatThinkNetAndHuluIsCool(Custo
 GO 
 
 /*Xiefes Code*/
+
 --How many episode of shows total for each language
 Create Function Calculate_Languege_Episode(@LanguageID int)
 returns Int
@@ -64,6 +65,7 @@ Go
 Alter Table tblLanguage
 Add Language_Episodes_Count as (dbo.Calculate_Languege_Episode(LanguageID))
 Go
+
 --How many times have customer download from netflix
 Create function Calculate_download_netflix(@CustomerID int)
 returns integer
@@ -84,6 +86,7 @@ Add Count_Download_Netflix as (dbo.Calculate_download_netflix(CustomerID))
 Go
 
 /*Malorys Code*/
+
 create  --drop
  FUNCTION fn_NumOfCustomersFromTexasWatchManyPlatform(@PlatformID INT)
 RETURNS INT 
@@ -129,6 +132,7 @@ ADD totalCustWatchGosipGirl AS (dbo.fn_numberOfCustomersWatchGossipGirl(Customer
 GO 
 
 /*Madisens Code*/
+
 -- 5) computed column: number of customers from Hawaii that watch shows in Swedish
 CREATE --drop
 FUNCTION fn_NumHawaiiCustomersWhoWatchSwedishShows(@CustomerID INT)
